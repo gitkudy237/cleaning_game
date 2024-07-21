@@ -37,7 +37,8 @@ namespace CleaningGame2
                 for (int j = 0; j < BottomRight.Y; j++)
                     Board[i, j] = ' ';
         }
-         public void PlaceRobot()
+       
+        public void PlaceRobot()
         {
             Board[Rob.CurrentPosition.X, Rob.CurrentPosition.Y] = Rob.Name;
         }
@@ -63,7 +64,8 @@ namespace CleaningGame2
 
                 };
                 while (Board[obs.Position.X, obs.Position.Y] != ' ')
-                obs.Position = RandomPosition();
+                    obs.Position = RandomPosition();
+                Board[obs.Position.X, obs.Position.Y] = obs.Name;
 
             }
 
@@ -76,6 +78,7 @@ namespace CleaningGame2
                 };
                 while (Board[dirt.Position.X, dirt.Position.Y] != ' ')
                     dirt.Position = RandomPosition();
+                Board[dirt.Position.X, dirt.Position.Y] = dirt.Name;
             }
         }
 
@@ -91,9 +94,54 @@ namespace CleaningGame2
             for (int i = 0; i < BottomRight.X; i++)
             {
                 for (int j = 0; j < BottomRight.Y; j++)
-                    Console.WriteLine(Board[i, j]); 
+                    Console.Write("" + Board[i, j]); 
                 Console.WriteLine();
             }
+
+            Console.WriteLine($"\nCleaned: \tRemaining: ");
+        }
+
+        public bool CanMove(int direction)
+        {
+            bool canMove = false;
+            switch (direction)
+            {
+                case 0: // testing the right
+                    if (Board[Rob.CurrentPosition.X + 1, Rob.CurrentPosition.Y] == ' '||
+                        Board[Rob.CurrentPosition.X + 1, Rob.CurrentPosition.Y] == 'D'||
+                        Rob.CurrentPosition.X < BottomRight.X) { canMove = true; }
+                    break;
+                case 1: // testing up
+                    if (Board[Rob.CurrentPosition.X, Rob.CurrentPosition.Y - 1] == ' '||
+                        Board[Rob.CurrentPosition.X, Rob.CurrentPosition.Y - 1] == 'D'||
+                        Rob.CurrentPosition.X > BottomRight.X) { canMove = true; }
+                    break;
+                case 2: // testing the left
+                    if (Board[Rob.CurrentPosition.X - 1, Rob.CurrentPosition.Y] == ' '||
+                        Board[Rob.CurrentPosition.X - 1, Rob.CurrentPosition.Y] == 'D'||
+                        Rob.CurrentPosition.X > BottomRight.X) { canMove = true; }
+                    break;
+                default:// testing down
+                    if (Board[Rob.CurrentPosition.X, Rob.CurrentPosition.Y + 1] == ' ' ||
+                        Board[Rob.CurrentPosition.X, Rob.CurrentPosition.Y + 1] == 'D' ||
+                        Rob.CurrentPosition.X < BottomRight.X) { canMove = true; }
+                    break;
+            }
+
+            return canMove;
+
+        }
+
+        public void Start()
+        {
+            int direction = Rob.Direction();
+            if(CanMove(direction))
+            {
+                Rob.Move(direction);
+                Board[Rob.CurrentPosition.X, Rob.CurrentPosition.Y] = Rob.Name;
+            }
+
+            DisplayBoard();
         }
     }
 }

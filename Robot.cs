@@ -12,7 +12,7 @@ namespace CleaningGame2
         public Point BottomRight { get; set; }
         public Point CurrentPosition { get; set; }
         public char Name { get; set; }
-
+        
         public Robot() { }
         public Robot(Point tl, Point br, Point cp, char name)
         {
@@ -20,6 +20,13 @@ namespace CleaningGame2
             BottomRight = br;
             CurrentPosition = cp;
             Name = name;
+        }
+
+        //Generate direction
+        public int Direction()
+        {
+            Random direction = new Random();
+            return direction.Next(4);
         }
 
         public void Move(int direction)

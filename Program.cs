@@ -1,2 +1,10 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using CleaningGame2;
+
+Point bottomR = new Point(25, 50);
+
+Game game = new Game(bottomR, 20, 100);
+game.InitGame();
+game.DisplayBoard();
+
+Console.ReadLine();
+game.Start();
