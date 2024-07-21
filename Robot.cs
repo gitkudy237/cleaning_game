@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace CleaningGame2
 {
-    internal class Point
+    internal class Robot
     {
-        public int X {  get; set; } 
-        public int Y { get; set; }
-
-        public Point() { }
+        Point TopLeft
     }
 }

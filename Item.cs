@@ -8,14 +8,14 @@ namespace CleaningGame2
 {
     internal class Item
     {
-        public char name { get; set; } 
-        public Point position { get; set; }
+        public char Name { get; set; } 
+        public Point Position { get; set; }
 
         public Item () { }
         public Item (char name, Point position)
         {
-            this.name = name;
-            this.position = position;
+            Name = name;
+            Position = position;
         }
     }
 }
