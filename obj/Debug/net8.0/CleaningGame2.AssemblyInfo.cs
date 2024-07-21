@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CleaningGame2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+803a00b041a9ff6675abcff6e1036943261720ad")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+731fa274b29f0816e9f5c9c0f2b6295521e8d142")]
 [assembly: System.Reflection.AssemblyProductAttribute("CleaningGame2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CleaningGame2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
