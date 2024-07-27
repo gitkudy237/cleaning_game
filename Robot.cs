@@ -14,11 +14,12 @@ namespace CleaningGame2
         public char Name { get; set; }
         
         public Robot() { }
-        public Robot(Point tl, Point br, Point cp, char name)
+        public Robot(Point tl, Point br, char name = 'R')
         {
             TopLeft = tl;
             BottomRight = br;
-            CurrentPosition = cp;
+            //Placing the robot in the middle of the board
+            CurrentPosition = new Point(br.X / 2, br.Y / 2);
             Name = name;
         }
 
@@ -39,10 +40,10 @@ namespace CleaningGame2
                 case 1: // up
                     CurrentPosition.Y -= 1;
                     break;
-                case 3: // left
+                case 2: // left
                     CurrentPosition.X -= 1;
                     break;
-                default: // down
+                case 3: // down
                     CurrentPosition.Y += 1;
                     break;
             }
