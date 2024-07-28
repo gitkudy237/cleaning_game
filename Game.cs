@@ -86,15 +86,13 @@ namespace CleaningGame2
 
         public void DisplayBoard()
         {
-
+            Console.Clear();
             for (int i = 0; i < BottomRight.Y; i++)
             {
                 for (int j = 0; j < BottomRight.X; j++)
                 {
                     if (i == 0 || j == 0 || i == Board.GetUpperBound(0) || j == Board.GetUpperBound(1))
-                    {
                         Board[i, j] = '#';
-                    }
                     Console.Write("." + Board[i, j]); 
                 }
                 Console.WriteLine();
@@ -138,7 +136,6 @@ namespace CleaningGame2
                     break;
             }
             return canMove;
-
         }
 
         public bool IsStuck()
@@ -155,7 +152,7 @@ namespace CleaningGame2
             while (NumDirts > 0)
             {
                 
-                Console.Clear();
+                
                 if (IsStuck())
                 {
                     Board[Rob.CurrentPosition.Y + 1, Rob.CurrentPosition.X] = ' ';
@@ -177,10 +174,10 @@ namespace CleaningGame2
                     }
 
                     Board[Rob.CurrentPosition.Y, Rob.CurrentPosition.X] = Rob.Name;
+                    DisplayBoard();
+                    Thread.Sleep(1000);
                 }
 
-                DisplayBoard();
-                Thread.Sleep(1000);
 
                 Console.WriteLine($"direction is {direction} position: ({Rob.CurrentPosition.Y}, {Rob.CurrentPosition.X})");
             }
