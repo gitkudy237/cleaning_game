@@ -48,5 +48,10 @@ namespace CleaningGame2
                     break;
             }
         }
+
+        public void Move(Point newLocation)
+        {
+            CurrentPosition = newLocation;
+        }
     }
 }

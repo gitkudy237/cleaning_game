@@ -8,13 +8,13 @@ namespace CleaningGame2
 {
     internal class Game
     {
-        public Robot Rob {  get; set; } 
+        private Robot _robot;
+        private char[,] _board;
+        private int _cleared = 0;
         public Point BottomRight { get; set; }
         public int NumObstacles { get; set; }
         public int NumDirts { get; set; }
 
-        public int cleared = 0;
-        public char[,] Board { get; set; }
 
         public Game() { }
         public Game(Point bottomRight, int numObstacles, int numDirts)
@@ -22,45 +22,45 @@ namespace CleaningGame2
             BottomRight = bottomRight;
             NumObstacles = numObstacles;
             NumDirts = numDirts;
-            Rob = new(new Point(), bottomRight);
+            _robot = new(new Point(), bottomRight);
         }
 
-        public void InitBoard()
+        private void InitBoard()
         {
-            Board = new char[BottomRight.Y, BottomRight.X];
+            _board = new char[BottomRight.Y, BottomRight.X];
             for (int i = 0; i < BottomRight.Y; i++)
                 for (int j = 0; j < BottomRight.X; j++)
-                    Board[i, j] = ' ';
+                    _board[i, j] = ' ';
         }
        
-        public void PlaceRobot()
+        private void PlaceRobot()
         {
-            Board[Rob.CurrentPosition.Y, Rob.CurrentPosition.X] = Rob.Name;
+            _board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X] = _robot.Name;
         }
 
-        public Point RandomPosition()
+        private Point RandomPosition()
         {
-            Point p = new();
+            Point point = new();
             Random r = new();
-            p.X = r.Next(1, BottomRight.X - 2);
-            p.Y = r.Next(2, BottomRight.Y - 1);
+            point.X = r.Next(1, BottomRight.X - 2);
+            point.Y = r.Next(2, BottomRight.Y - 1);
 
-            return p;
+            return point;
         }
 
-        public void PlaceItems()
+        private void PlaceItems()
         {
             for (int i = 0; i < NumObstacles; i++)
             {
-                Item obs = new()
+                Item obstacle = new()
                 {
                     Name = 'O',
                     Position = RandomPosition(),
 
                 };
-                while (Board[obs.Position.Y, obs.Position.X] != ' ')
-                    obs.Position = RandomPosition();
-                Board[obs.Position.Y, obs.Position.X] = obs.Name;
+                while (_board[obstacle.Position.Y, obstacle.Position.X] != ' ')
+                    obstacle.Position = RandomPosition();
+                _board[obstacle.Position.Y, obstacle.Position.X] = obstacle.Name;
 
             }
 
@@ -71,9 +71,9 @@ namespace CleaningGame2
                     Name = 'D',
                     Position = RandomPosition(),
                 };
-                while (Board[dirt.Position.Y, dirt.Position.X] != ' ')
+                while (_board[dirt.Position.Y, dirt.Position.X] != ' ')
                     dirt.Position = RandomPosition();
-                Board[dirt.Position.Y, dirt.Position.X] = dirt.Name;
+                _board[dirt.Position.Y, dirt.Position.X] = dirt.Name;
             }
         }
 
@@ -91,54 +91,75 @@ namespace CleaningGame2
             {
                 for (int j = 0; j < BottomRight.X; j++)
                 {
-                    if (i == 0 || j == 0 || i == Board.GetUpperBound(0) || j == Board.GetUpperBound(1))
-                        Board[i, j] = '#';
-                    Console.Write("." + Board[i, j]); 
+                    if (i == 0 || j == 0 || i == _board.GetUpperBound(0) || j == _board.GetUpperBound(1))
+                        _board[i, j] = '#';
+                    Console.Write("." + _board[i, j]); 
                 }
                 Console.WriteLine();
             }
-
-            Console.WriteLine($"Cleared: {cleared}\tRemaining: {NumDirts}");
+            Console.WriteLine($"Cleared: {_cleared}\tRemaining: {NumDirts}");
         }
 
-        public bool CanMove(int direction)
+        private bool CanMove(int direction)
         {
             bool canMove = false;
 
             switch (direction)
             {
                 case 0: // checking right
-                    if (Board[Rob.CurrentPosition.Y, Rob.CurrentPosition.X + 1] == 'D' &&
-                        BottomRight.X + 1> Rob.CurrentPosition.X) { canMove = true; break; }
-                    if (Board[Rob.CurrentPosition.Y, Rob.CurrentPosition.X + 1] == ' ' &&
-                        BottomRight.X + 1> Rob.CurrentPosition.X) { canMove = true; break; }
+                    if (_board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X + 1] == 'D' ) { canMove = true; break; }
+                    if (_board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X + 1] == ' ' ) { canMove = true; break; }
                     break;
 
                 case 1: // checking up
-                    if (Board[Rob.CurrentPosition.Y - 1, Rob.CurrentPosition.X] == 'D' &&
-                        Rob.CurrentPosition.Y > 1) { canMove = true; break; }
-                    if (Board[Rob.CurrentPosition.Y - 1, Rob.CurrentPosition.X] == ' ' &&
-                        Rob.CurrentPosition.Y > 1) { canMove = true; break; }
+                    if (_board[_robot.CurrentPosition.Y - 1, _robot.CurrentPosition.X] == 'D' ) { canMove = true; break; }
+                    if (_board[_robot.CurrentPosition.Y - 1, _robot.CurrentPosition.X] == ' ' ) { canMove = true; break; }
                     break;
 
                 case 2: // checking left
-                    if (Board[Rob.CurrentPosition.Y, Rob.CurrentPosition.X - 1] == 'D' &&
-                        Rob.CurrentPosition.X > 1) { canMove = true; break; }
-                    if (Board[Rob.CurrentPosition.Y, Rob.CurrentPosition.X - 1] == ' ' &&
-                        Rob.CurrentPosition.X > 1) { canMove = true; break; }
+                    if (_board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X - 1] == 'D' ){ canMove = true; break; }
+                    if (_board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X - 1] == ' ') { canMove = true; break; }
                     break;
 
                 case 3: // checking down
-                    if (Board[Rob.CurrentPosition.Y + 1, Rob.CurrentPosition.X] == 'D' &&
-                        BottomRight.Y > Rob.CurrentPosition.Y) { canMove = true; break; }
-                    if (Board[Rob.CurrentPosition.Y + 1, Rob.CurrentPosition.X] == ' ' &&
-                        BottomRight.Y > Rob.CurrentPosition.Y) { canMove = true; break; }
+                    if (_board[_robot.CurrentPosition.Y + 1, _robot.CurrentPosition.X] == 'D' ) { canMove = true; break; }
+                    if (_board[_robot.CurrentPosition.Y + 1, _robot.CurrentPosition.X] == ' ') { canMove = true; break; }
                     break;
             }
             return canMove;
         }
 
-        public bool IsStuck()
+        private Point ClosestPoint()
+        {
+            Point point = new();
+            if (_board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X + 1] == 'D') // right
+            {
+                point.X = _robot.CurrentPosition.X + 1; point.Y = _robot.CurrentPosition.Y;
+                return point;
+            }
+            
+            if (_board[_robot.CurrentPosition.Y - 1, _robot.CurrentPosition.X] == 'D') // up
+            {
+                point.X = _robot.CurrentPosition.X; point.Y = _robot.CurrentPosition.Y - 1;
+                return point;
+            }
+            
+            if (_board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X - 1] == 'D') // left
+            {
+                point.X = _robot.CurrentPosition.X - 1; point.Y = _robot.CurrentPosition.Y;
+                return point;
+            }
+            
+            if (_board[_robot.CurrentPosition.Y + 1, _robot.CurrentPosition.X] == 'D') // down
+            {
+                point.X = _robot.CurrentPosition.X; point.Y = _robot.CurrentPosition.Y + 1;
+                return point;
+            }
+
+            return null;
+        }
+
+        private bool IsStuck()
         {
             bool isStuck = false;
             if(CanMove(0) ==  false && CanMove(1) == false && CanMove(2) == false && CanMove(3) == false)
@@ -149,37 +170,44 @@ namespace CleaningGame2
 
         public void Start()
         {
+            Console.WriteLine("Press enter to start the game.");
+            Console.ReadLine();
             while (NumDirts > 0)
             {
-                
-                
                 if (IsStuck())
                 {
-                    Board[Rob.CurrentPosition.Y + 1, Rob.CurrentPosition.X] = ' ';
-                    Board[Rob.CurrentPosition.Y - 1, Rob.CurrentPosition.X] = ' ';
-                    Board[Rob.CurrentPosition.Y, Rob.CurrentPosition.X + 1] = ' ';
-                    Board[Rob.CurrentPosition.Y, Rob.CurrentPosition.X - 1] = ' ';
+                    _board[_robot.CurrentPosition.Y + 1, _robot.CurrentPosition.X] = ' ';
+                    _board[_robot.CurrentPosition.Y - 1, _robot.CurrentPosition.X] = ' ';
+                    _board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X + 1] = ' ';
+                    _board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X - 1] = ' ';
+                    DisplayBoard();
                 }
 
-                int direction = Rob.Direction();
+
+                int direction = _robot.Direction();
                 while(CanMove(direction))
                 {
-                    Board[Rob.CurrentPosition.Y, Rob.CurrentPosition.X] = '^';
-                    Rob.Move(direction);
+                    _board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X] = '^';
+                    
+                    Point closestPoint = ClosestPoint();
+                    if (closestPoint != null)
+                        _robot.Move(closestPoint);
+                    
+                    else
+                        _robot.Move(direction);
 
-                    if (Board[Rob.CurrentPosition.Y, Rob.CurrentPosition.X] == 'D')
+                    if (_board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X] == 'D')
                     {
                         NumDirts--;
-                        cleared++;
+                        _cleared++;
                     }
 
-                    Board[Rob.CurrentPosition.Y, Rob.CurrentPosition.X] = Rob.Name;
+                    _board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X] = _robot.Name;
                     DisplayBoard();
                     Thread.Sleep(1000);
                 }
+                
 
-
-                Console.WriteLine($"direction is {direction} position: ({Rob.CurrentPosition.Y}, {Rob.CurrentPosition.X})");
             }
         }
     }
