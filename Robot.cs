@@ -49,6 +49,15 @@ namespace CleaningGame2
             }
         }
 
+        public void Move(List<int> path)
+        {
+            while (path.Count > 0)
+            {
+                Move(path.First());
+                path.RemoveAt(0);
+            }
+        }
+
         public void Move(Point newLocation)
         {
             CurrentPosition = newLocation;

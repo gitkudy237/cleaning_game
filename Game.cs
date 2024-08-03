@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace CleaningGame2
@@ -85,7 +86,7 @@ namespace CleaningGame2
 
         public void DisplayBoard()
         {
-            Console.Clear();
+            Console.SetCursorPosition(0, 0);
             for (int i = 0; i < BottomRight.Y; i++)
             {
                 for (int j = 0; j < BottomRight.X; j++)
@@ -98,7 +99,7 @@ namespace CleaningGame2
             }
             Console.WriteLine($"Cleared: {_cleared}\tRemaining: {NumDirts}");
             Console.WriteLine($"Robot position: ({_robot.CurrentPosition.Y}, {_robot.CurrentPosition.X})");
-            Console.WriteLine($"Closest point is ({ClosestDirt().X}, {ClosestDirt().Y})");
+            Console.WriteLine($"Closest point is ({ClosestDirt().Y}, {ClosestDirt().X})");
         }
 
         private bool CanMove(int direction)
@@ -130,6 +131,7 @@ namespace CleaningGame2
             return canMove;
         }
 
+        // Determines the closest Dirt in the immediate surrouding of the robot
         private Point ClosestPoint()
         {
             Point point = new();
@@ -159,21 +161,39 @@ namespace CleaningGame2
 
             return null;
         }
+        private float Distance(Point point1, Point point2)
+        {
+            return (float)Math.Sqrt((point1.X - point2.X) * (point1.X - point2.X) + (point1.Y - point2.Y) * (point1.Y - point2.Y));
+        } 
 
+        // Determines the closest dirt among all dirts found on the board from the actual robot position.
         private Point ClosestDirt()
         {
-            Point closestPoint = new(0, 0);
-            float minDistance = Distance(_robot.CurrentPosition, closestPoint);
+            Point closestPoint = new();
             for (int i = 0; i < BottomRight.Y; i++)
             {
-                for (int j = 0; j < BottomRight.X; j++)
+                for(int j = 0; j < BottomRight.X; j++)
+                {
+                    if (_board[j, i] == 'D')
+                    {
+                        closestPoint.X = i;
+                        closestPoint.Y = j; 
+                        break;
+                    }
+                }
+            }
+
+            float minDistance = Distance(_robot.CurrentPosition, closestPoint);
+            for (int i = 1; i < BottomRight.Y; i++)
+            {
+                for (int j = 1; j < BottomRight.X; j++)
                 {
                     if (_board[i, j] == 'D')
                     {
                         float distance = Distance(_robot.CurrentPosition, new Point(j, i));
                         if (distance < minDistance)
                         {
-                            closestPoint = new(i, j);
+                            closestPoint = new(j, i);
                             minDistance = distance;
                         }
                     }
@@ -183,10 +203,37 @@ namespace CleaningGame2
             return closestPoint;
         }
 
-        private float Distance(Point point1, Point point2)
+        private List<int> PathTo(Point point)
         {
-            return (float)Math.Sqrt((point1.X - point2.X) * (point1.X - point2.X) + (point1.Y - point2.Y) * (point1.Y - point2.Y));
-        } 
+            var path = new List<int>();
+            var pathFinder = new Point();
+            pathFinder.X = _robot.CurrentPosition.X;
+            pathFinder.Y = _robot.CurrentPosition.Y;
+
+            while (pathFinder.X < point.X)
+            {
+                path.Add(0); // Add right to the path
+                pathFinder.X++;
+            }
+            while (pathFinder.Y > point.Y)
+            {
+                path.Add(1); // Add up to the path
+                pathFinder.Y--;
+            }
+            while (pathFinder.X > point.X)
+            {
+                path.Add(2); // Add left to the path
+                pathFinder.X--;
+            }
+            while (pathFinder.Y < point.Y)
+            {
+                path.Add(3); // Add down to the path
+                pathFinder.Y++;
+            }
+
+            return path;
+        }
+
 
         private bool IsStuck()
         {
@@ -213,30 +260,27 @@ namespace CleaningGame2
                 }
 
 
-                int direction = _robot.Direction();
-                while(CanMove(direction))
+                //int direction = _robot.Direction();
+
+                var closestDirt = ClosestDirt();
+                var path = PathTo(closestDirt);
+                
+                while (path.Count > 0)
                 {
-                    _board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X] = '^';
-                    
-                    Point closestPoint = ClosestPoint();
-                    if (closestPoint != null)
-                        _robot.Move(closestPoint);
-                    
-                    else
-                        _robot.Move(direction);
+                    _board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X] = ' ';
+                    _robot.Move(path.First());
+                    path.RemoveAt(0);
 
                     if (_board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X] == 'D')
                     {
                         NumDirts--;
                         _cleared++;
                     }
-
                     _board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X] = _robot.Name;
+                    path.ForEach(x => Console.Write(x + " "));
                     DisplayBoard();
-                    Thread.Sleep(1000);
+                    Thread.Sleep(300);
                 }
-                
-
             }
         }
     }
