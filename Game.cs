@@ -11,12 +11,11 @@ namespace CleaningGame2
         private Robot _robot;
         private char[,] _board;
         private int _cleared = 0;
-        public Point BottomRight { get; set; }
-        public int NumObstacles { get; set; }
-        public int NumDirts { get; set; }
+        public Point BottomRight { get; init; }
+        public int NumObstacles { get; init; }
+        public int NumDirts { get; private set; }
 
 
-        public Game() { }
         public Game(Point bottomRight, int numObstacles, int numDirts)
         {
             BottomRight = bottomRight;
@@ -98,6 +97,8 @@ namespace CleaningGame2
                 Console.WriteLine();
             }
             Console.WriteLine($"Cleared: {_cleared}\tRemaining: {NumDirts}");
+            Console.WriteLine($"Robot position: ({_robot.CurrentPosition.Y}, {_robot.CurrentPosition.X})");
+            Console.WriteLine($"Closest point is ({ClosestDirt().X}, {ClosestDirt().Y})");
         }
 
         private bool CanMove(int direction)
@@ -158,6 +159,34 @@ namespace CleaningGame2
 
             return null;
         }
+
+        private Point ClosestDirt()
+        {
+            Point closestPoint = new(0, 0);
+            float minDistance = Distance(_robot.CurrentPosition, closestPoint);
+            for (int i = 0; i < BottomRight.Y; i++)
+            {
+                for (int j = 0; j < BottomRight.X; j++)
+                {
+                    if (_board[i, j] == 'D')
+                    {
+                        float distance = Distance(_robot.CurrentPosition, new Point(j, i));
+                        if (distance < minDistance)
+                        {
+                            closestPoint = new(i, j);
+                            minDistance = distance;
+                        }
+                    }
+                }
+            }
+
+            return closestPoint;
+        }
+
+        private float Distance(Point point1, Point point2)
+        {
+            return (float)Math.Sqrt((point1.X - point2.X) * (point1.X - point2.X) + (point1.Y - point2.Y) * (point1.Y - point2.Y));
+        } 
 
         private bool IsStuck()
         {
