@@ -42,8 +42,8 @@ namespace CleaningGame2
         {
             Point point = new();
             Random r = new();
-            point.X = r.Next(1, BottomRight.X - 2);
-            point.Y = r.Next(2, BottomRight.Y - 1);
+            point.X = r.Next(1, BottomRight.X - 1);
+            point.Y = r.Next(1, BottomRight.Y - 1);
 
             return point;
         }
@@ -93,7 +93,7 @@ namespace CleaningGame2
                 {
                     if (i == 0 || j == 0 || i == _board.GetUpperBound(0) || j == _board.GetUpperBound(1))
                         _board[i, j] = '#';
-                    Console.Write("." + _board[i, j]); 
+                    Console.Write(" " + _board[i, j]); 
                 }
                 Console.WriteLine();
             }
@@ -248,26 +248,26 @@ namespace CleaningGame2
         {
             Console.WriteLine("Press enter to start the game.");
             Console.ReadLine();
+            Console.Clear();
             while (NumDirts > 0)
             {
-                if (IsStuck())
-                {
-                    _board[_robot.CurrentPosition.Y + 1, _robot.CurrentPosition.X] = ' ';
-                    _board[_robot.CurrentPosition.Y - 1, _robot.CurrentPosition.X] = ' ';
-                    _board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X + 1] = ' ';
-                    _board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X - 1] = ' ';
-                    DisplayBoard();
-                }
-
-
-                //int direction = _robot.Direction();
+                //if (IsStuck())
+                //{
+                //    _board[_robot.CurrentPosition.Y + 1, _robot.CurrentPosition.X] = ' ';
+                //    _board[_robot.CurrentPosition.Y - 1, _robot.CurrentPosition.X] = ' ';
+                //    _board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X + 1] = ' ';
+                //    _board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X - 1] = ' ';
+                //    DisplayBoard();
+                //}
 
                 var closestDirt = ClosestDirt();
                 var path = PathTo(closestDirt);
                 
-                while (path.Count > 0)
+                while (path.Count > 0 && CanMove(path.First()))
                 {
+
                     _board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X] = ' ';
+
                     _robot.Move(path.First());
                     path.RemoveAt(0);
 
@@ -276,12 +276,39 @@ namespace CleaningGame2
                         NumDirts--;
                         _cleared++;
                     }
-                    _board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X] = _robot.Name;
-                    path.ForEach(x => Console.Write(x + " "));
+                    PlaceRobot();
                     DisplayBoard();
                     Thread.Sleep(300);
                 }
+                if (path.Count > 0)
+                {
+                    // At this point, the robot could not complete the path because of an obstacle on
+                    // the way. I then generate a random direction in which the robot shall move
+                    // and recalculate the new path from its new position.
+                    for (int i = 0; i < 3; i++)
+                    {
+                        // I run this instruction 3 times to minimise the chances of the robot
+                        // getting stuck again
+                        int direction = _robot.Direction();
+                        while (!CanMove(direction))
+                        {
+                            direction = _robot.Direction();
+                        }
+                        _board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X] = ' ';
+                        _robot.Move(direction);
+                        if (_board[_robot.CurrentPosition.Y, _robot.CurrentPosition.X] == 'D')
+                        {
+                            NumDirts--;
+                            _cleared++;
+                        }
+                        PlaceRobot();
+                        DisplayBoard();
+                        Thread.Sleep(300);
+                    }
+                } 
+                path.Clear();
             }
+            Console.WriteLine("The house is clean now." + (char)1);
         }
     }
 }

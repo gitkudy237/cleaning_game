@@ -1,0 +1,15 @@
+C:\Users\bayar\source\repos\CleaningGame2\CleaningGame2\bin\Debug\net8.0\CleaningGame2.exe
+C:\Users\bayar\source\repos\CleaningGame2\CleaningGame2\bin\Debug\net8.0\CleaningGame2.deps.json
+C:\Users\bayar\source\repos\CleaningGame2\CleaningGame2\bin\Debug\net8.0\CleaningGame2.runtimeconfig.json
+C:\Users\bayar\source\repos\CleaningGame2\CleaningGame2\bin\Debug\net8.0\CleaningGame2.dll
+C:\Users\bayar\source\repos\CleaningGame2\CleaningGame2\bin\Debug\net8.0\CleaningGame2.pdb
+C:\Users\bayar\source\repos\CleaningGame2\CleaningGame2\obj\Debug\net8.0\CleaningGame2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\bayar\source\repos\CleaningGame2\CleaningGame2\obj\Debug\net8.0\CleaningGame2.AssemblyInfoInputs.cache
+C:\Users\bayar\source\repos\CleaningGame2\CleaningGame2\obj\Debug\net8.0\CleaningGame2.AssemblyInfo.cs
+C:\Users\bayar\source\repos\CleaningGame2\CleaningGame2\obj\Debug\net8.0\CleaningGame2.csproj.CoreCompileInputs.cache
+C:\Users\bayar\source\repos\CleaningGame2\CleaningGame2\obj\Debug\net8.0\CleaningGame2.dll
+C:\Users\bayar\source\repos\CleaningGame2\CleaningGame2\obj\Debug\net8.0\refint\CleaningGame2.dll
+C:\Users\bayar\source\repos\CleaningGame2\CleaningGame2\obj\Debug\net8.0\CleaningGame2.pdb
+C:\Users\bayar\source\repos\CleaningGame2\CleaningGame2\obj\Debug\net8.0\CleaningGame2.genruntimeconfig.cache
+C:\Users\bayar\source\repos\CleaningGame2\CleaningGame2\obj\Debug\net8.0\ref\CleaningGame2.dll
+C:\Users\bayar\source\repos\CleaningGame2\CleaningGame2\obj\Debug\net8.0\CleaningGame2.sourcelink.json
